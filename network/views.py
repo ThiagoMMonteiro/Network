@@ -3,11 +3,26 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
-from .models import User
+from .models import User, Post
 
 
 def index(request):
+    return render(request, "network/index.html")
+
+
+@csrf_exempt
+@login_required
+def new_post(request):
+    if request.method == "POST":
+        owner = request.user
+        content = request.POST["compose-post"]
+        new_post = Post(owner=owner, content=content)
+        new_post.save()
+        return render(request, "network/index.html")
+
     return render(request, "network/index.html")
 
 

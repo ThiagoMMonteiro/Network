@@ -1,5 +1,25 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
-    TODO
+    <div id="profile-view">
+
+    </div>
+
+    <div id="posts-view">
+        <h3></h3>
+        {% if user.is_authenticated %}
+            <div id="new-post" class="container">
+                <form class="row g-3" action="{% url 'new_post' %}" method="POST">
+                    <label for="compose-post">New Post</label>
+                    <textarea class="form-control" id="compose-post" name="compose-post" autofocus></textarea>
+                    <input class="btn btn-primary" type="submit" value="Submit">
+                </form>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}

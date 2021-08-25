@@ -7,7 +7,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("owner", "content", "post_date")
+    list_display = ("user", "content", "post_date")
 
 
 admin.site.register(User, UserAdmin)

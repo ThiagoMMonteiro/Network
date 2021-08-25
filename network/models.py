@@ -8,9 +8,16 @@ class User(AbstractUser):
 
 
 class Post(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_posts")
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="posts")
     content = models.TextField(blank=True)
-    post_date = models.DateTimeField(default=django.utils.timezone.now, verbose_name='post date')
+    post_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.owner}: {self.content} Date: {self.post_date}"
+        return f"{self.user}: {self.content} Date: {self.post_date}"
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+            "post_date": self.post_date.strftime("%b %d %Y, %I:%M %p")
+        }

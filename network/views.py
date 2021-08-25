@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -5,6 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 from .models import User, Post
 
@@ -16,14 +19,36 @@ def index(request):
 @csrf_exempt
 @login_required
 def new_post(request):
-    if request.method == "POST":
-        owner = request.user
-        content = request.POST["compose-post"]
-        new_post = Post(owner=owner, content=content)
-        new_post.save()
-        return render(request, "network/index.html")
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
 
-    return render(request, "network/index.html")
+    post = json.loads(request.body)
+
+    user = request.user
+    content = post.get("post_content", "")
+
+    new_post = Post(user=user, content=content)
+    new_post.save()
+
+    return JsonResponse({"message": "New post was submitted successfully."}, status=201)
+
+
+def all_posts(request, view):
+
+    user = request.user
+
+    if view == "all-posts":
+        posts = Post.objects.all()
+    elif view == "following":
+        posts = Post.objects.filter(
+            user=request.user
+        )
+    else:
+        return JsonResponse({"error": "Invalid view."}, status=400)
+
+    # Return posts in reverse chronological order
+    posts = posts.order_by("-post_date").all()
+    return JsonResponse([post.serialize() for post in posts], safe=False)
 
 
 def login_view(request):

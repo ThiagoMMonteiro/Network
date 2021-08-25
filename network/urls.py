@@ -9,5 +9,7 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
 
-    path("allposts", views.new_post, name="new_post"),
+    # API Routes
+    path("newpost", views.new_post, name="new_post"),
+    path("allposts/<str:view>", views.all_posts, name="allposts"),
 ]

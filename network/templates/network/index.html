@@ -10,9 +10,9 @@
         <h3></h3>
         {% if user.is_authenticated %}
             <div id="new-post" class="container">
-                <form class="row g-3" action="{% url 'new_post' %}" method="POST">
-                    <label for="compose-post">New Post</label>
-                    <textarea class="form-control" id="compose-post" name="compose-post" autofocus></textarea>
+                <form id="compose-post" class="row g-3">
+                    <label for="content-post">New Post</label>
+                    <textarea class="form-control" id="content-post" name="compose-post" autofocus></textarea>
                     <input class="btn btn-primary" type="submit" value="Submit">
                 </form>
             </div>

@@ -40,15 +40,17 @@ def all_posts(request, view):
     if view == "all-posts":
         posts = Post.objects.all()
     elif view == "following":
-        posts = Post.objects.filter(
-            user=request.user
-        )
+        posts = Post.objects.all()
     else:
         return JsonResponse({"error": "Invalid view."}, status=400)
 
     # Return posts in reverse chronological order
     posts = posts.order_by("-post_date").all()
     return JsonResponse([post.serialize() for post in posts], safe=False)
+
+
+def load_profile(user):
+    pass
 
 
 def login_view(request):

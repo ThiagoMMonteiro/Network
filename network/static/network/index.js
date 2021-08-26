@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Use buttons to toggle between views
   document.querySelector('#all-posts').addEventListener('click', () => load_posts_view('all-posts'));
   document.querySelector('#following').addEventListener('click', () => load_posts_view('following'));
-  document.querySelector('#profile').addEventListener('click', load_profile_view);
+  document.querySelector('#profile-nav').addEventListener('click', load_profile_view);
 
   // By default, load the inbox
   load_posts_view('all-posts');
@@ -30,7 +30,21 @@ function load_posts_view(view) {
   fetch(`/allposts/${view}`)
   .then(response => response.json())
   .then(posts => {
-    console.log(posts)
+    console.log(posts);
+
+    posts.forEach(post => {
+
+      const element = document.createElement('div');
+      element.className = "post-div";
+
+      document.querySelector('#posts-view').append(element);
+      element.innerHTML = `<a class="user-profile" href="#">${post["user"]}</a> says: <pre> ${post["content"]} <br><br> ${post["post_date"]} <br> LIKES`;
+    })
+    document.body.addEventListener('click', function (e) {
+      if (e.target.className === 'user-profile') {
+        load_profile_view();
+      }
+    });
   });
 }
 

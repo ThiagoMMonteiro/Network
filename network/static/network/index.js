@@ -1,12 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // Use buttons to toggle between views
-  document.querySelector('#all-posts').addEventListener('click', () => load_posts_view('all-posts'));
-  document.querySelector('#following').addEventListener('click', () => load_posts_view('following'));
-  document.querySelector('#profile-nav').addEventListener('click', load_profile_view);
+  document.querySelector('#allposts').addEventListener('click', () => load_posts_view('allposts'));
+  if (document.getElementById('following')) {
+    document.querySelector('#following').addEventListener('click', () => load_posts_view('following'));
+  }
+  if (document.getElementById('profile-nav')) {
+    document.querySelector('#profile-nav').addEventListener('click', load_profile_view);
+  }
 
-  // By default, load the inbox
-  load_posts_view('all-posts');
+  // By default, when logged in, load the inbox
+  load_posts_view('allposts');
 });
 
 // Posts view include "All Posts" view and "Following" view
@@ -15,17 +19,15 @@ function load_posts_view(view) {
   document.querySelector('#posts-view').style.display = 'block';
   document.querySelector('#profile-view').style.display = 'none';
 
-  // Show the mailbox name
-  document.querySelector('h3').innerHTML = `${view.charAt(0).toUpperCase() + view.slice(1)}`;
-
   if (view === 'following') {
     document.querySelector('#new-post').style.display = 'none';
   } else { // All posts view
-      document.querySelector('#content-post').value = '';
-      document.querySelector('#compose-post').onsubmit = () => {
-        new_post();
-        return false;
-      };
+      // document.querySelector('#content-post').value = '';
+      if (document.getElementById('compose-post')) {
+        document.querySelector('#compose-post').onsubmit = () => {
+          new_post();
+        };
+      }
   }
   fetch(`/allposts/${view}`)
   .then(response => response.json())
@@ -60,8 +62,9 @@ function new_post() {
   .then(response => response.json())
   .then(result => {
     console.log(result);
-    load_posts_view('all-posts');
+    load_posts_view('allposts');
   });
+  return false;
 }
 
 function load_profile_view() {

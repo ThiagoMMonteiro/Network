@@ -35,9 +35,7 @@ def new_post(request):
 
 def all_posts(request, view):
 
-    user = request.user
-
-    if view == "all-posts":
+    if view == "allposts":
         posts = Post.objects.all()
     elif view == "following":
         posts = Post.objects.all()
@@ -49,7 +47,7 @@ def all_posts(request, view):
     return JsonResponse([post.serialize() for post in posts], safe=False)
 
 
-def load_profile(user):
+def load_profile(request, user_id):
     pass
 
 

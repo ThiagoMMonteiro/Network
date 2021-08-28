@@ -3,7 +3,14 @@
 
 {% block body %}
     <div id="profile-view">
-
+        <h3></h3>
+        <div id="infos" class="container">
+            Followers:
+            Following:
+            {% if user.is_authenticated %}
+                <button class="btn btn-primary" type="submit">Button</button>
+            {% endif %}
+        </div>
     </div>
 
     <div id="posts-view">
